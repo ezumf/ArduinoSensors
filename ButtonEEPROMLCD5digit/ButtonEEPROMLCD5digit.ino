@@ -199,7 +199,7 @@ void incrementaContador(){
 }
 
 void decrementaContador(){
-  if(contador>1){
+  if(contador>0){
     contador--;
     EEPROM.put( eeAddress, contador );
   }
