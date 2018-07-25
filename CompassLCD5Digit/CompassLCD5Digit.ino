@@ -31,16 +31,16 @@ Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 #define  Data_cmd   0xa0  //Write data cmd   
 
 // //Define port    HT1621 data port
-#define CS   2  //Pin 2 as chip selection output
-#define WR   3  //Pin 3 as read clock  output
-#define DATA 4  //Pin 4 as Serial data output
+#define CSa   5  //Pin 2 as chip selection output
+#define WRa   6  //Pin 3 as read clock  output
+#define DATAa 7  //Pin 4 as Serial data output
 
-#define CS1    digitalWrite(CS, HIGH)
-#define CS0    digitalWrite(CS, LOW)
-#define WR1    digitalWrite(WR, HIGH)
-#define WR0    digitalWrite(WR, LOW)
-#define DATA1  digitalWrite(DATA, HIGH)
-#define DATA0  digitalWrite(DATA, LOW)
+#define CSa1    digitalWrite(CSa, HIGH)
+#define CSa0    digitalWrite(CSa, LOW)
+#define WRa1    digitalWrite(WRa, HIGH)
+#define WRa0    digitalWrite(WRa, LOW)
+#define DATAa1  digitalWrite(DATAa, HIGH)
+#define DATAa0  digitalWrite(DATAa, LOW)
 
 
 
@@ -54,17 +54,17 @@ const char num[]={0xEB,0x60,0xC7,0xE5,0x6C,0xAD,0xAF,0xE0,0xEF,0xED,0xEE,0x2F,0x
                  Name: SendBit_1621(send data)
   ---------------------------------------------------------------------------*/
 
-void SendBit_1621(uchar sdata, uchar cnt) //High bit first
+void SendBit_1621a(uchar sdata, uchar cnt) //High bit first
 {
   uchar i;
   for (i = 0; i < cnt; i++)
   {
-    WR0;
+    WRa0;
     delayMicroseconds(20);
-    if (sdata & 0x80) DATA1;
-    else DATA0;
+    if (sdata & 0x80) DATAa1;
+    else DATAa0;
     delayMicroseconds(20);
-    WR1;
+    WRa1;
     delayMicroseconds(20);
     sdata <<= 1;
   }
@@ -76,38 +76,38 @@ void SendBit_1621(uchar sdata, uchar cnt) //High bit first
                   //Write MODE“100” AND 9 bits command
   ---------------------------------------------------------------------------*/
 
-void SendCmd_1621(uchar command)
+void SendCmd_1621a(uchar command)
 {
-  CS0;
-  SendBit_1621(0x80, 4);
-  SendBit_1621(command, 8);
-  CS1;
+  CSa0;
+  SendBit_1621a(0x80, 4);
+  SendBit_1621a(command, 8);
+  CSa1;
 }
 /**-------------------------------------------------------------------------
 
                   Name: Write_1621send data and cmd)
   ---------------------------------------------------------------------------*/
 
-void Write_1621(uchar addr, uchar sdata)
+void Write_1621a(uchar addr, uchar sdata)
 {
   addr <<= 2;
-  CS0;
-  SendBit_1621(0xa0, 3);    //Write MODE“101”
-  SendBit_1621(addr, 6);    //Write addr high 6 bits
-  SendBit_1621(sdata, 8);   //Write data  8 bits
-  CS1;
+  CSa0;
+  SendBit_1621a(0xa0, 3);    //Write MODE“101”
+  SendBit_1621a(addr, 6);    //Write addr high 6 bits
+  SendBit_1621a(sdata, 8);   //Write data  8 bits
+  CSa1;
 }
 /**-------------------------------------------------------------------------
 
                           Name: all_off(Clear Display)
   ---------------------------------------------------------------------------*/
 
-void HT1621_all_off(uchar num)
+void HT1621_all_offa(uchar num)
 { uchar i;
   uchar addr = 0;
   for (i = 0; i < num; i++)
   {
-    Write_1621(addr, 0x00);
+    Write_1621a(addr, 0x00);
     addr += 2;
   }
 }
@@ -116,11 +116,11 @@ void HT1621_all_off(uchar num)
                           Name: all_on(All lit)
 ****************************************************************************/
 
-void HT1621_all_on(uchar num)
+void HT1621_all_ona(uchar num)
 { uchar i, j;
   uchar addr = 0;
   for (i = 0; i < num; i++)
-  { Write_1621(addr, 0xff);
+  { Write_1621a(addr, 0xff);
     addr += 2;
   }
 }     
@@ -130,12 +130,12 @@ void HT1621_all_on(uchar num)
                           Name: Init_1621(initialize 1621)
 *****************************************************************************/
 
-void Init_1621(void)
+void Init_1621a(void)
 {
-  SendCmd_1621(Sys_en);
-  SendCmd_1621(RCosc);
-  SendCmd_1621(ComMode);
-  SendCmd_1621(LCD_on);
+  SendCmd_1621a(Sys_en);
+  SendCmd_1621a(RCosc);
+  SendCmd_1621a(ComMode);
+  SendCmd_1621a(LCD_on);
 }
 
 
@@ -148,7 +148,7 @@ void Init_1621(void)
 
 *****************************************************************************/
 
-void displayGrados(long int t)
+void displayGradosa(long int t)
 { uchar i;
   int j;
   boolean noCero=false;
@@ -168,15 +168,15 @@ void displayGrados(long int t)
 
   //excribimos los digitos acutalizados
   for (i = 0; i <= j; i++){
-    Write_1621(i * 2, dispnum[i]);
+    Write_1621a(i * 2, dispnum[i]);
   }
   //borramos los que no tienen que tener nada
   for (i = j+1; i < 4; i++){
-    Write_1621(i * 2, 0x00);
+    Write_1621a(i * 2, 0x00);
   }
 }
 
-void displaySensorDetails(void)
+void displaySensorDetailsa(void)
 {
   sensor_t sensor;
   mag.getSensor(&sensor);
@@ -192,9 +192,9 @@ void displaySensorDetails(void)
 
 void setup()
 {
-  pinMode(CS, OUTPUT); //Pin 2
-  pinMode(WR, OUTPUT); //Pin 3
-  pinMode(DATA, OUTPUT); //Pin 4
+  pinMode(CSa, OUTPUT); //Pin 5
+  pinMode(WRa, OUTPUT); //Pin 6
+  pinMode(DATAa, OUTPUT); //Pin 7
   Serial.begin(9600);
   Serial.println("Test Brújula digital"); Serial.println("");
 
@@ -207,7 +207,7 @@ void setup()
   }
 
   /* Display some basic information on this sensor */
-  displaySensorDetails();
+  displaySensorDetailsa();
 }
 
 
@@ -216,15 +216,15 @@ void loop()
   long int t = 0;
   uchar i, j;
   delay(50) ;
-  Init_1621() ;
+  Init_1621a() ;
   //Parpadeo, todos ON y Todos OFF
-  HT1621_all_on(16) ;
+  HT1621_all_ona(16) ;
   delay(300) ;
-  HT1621_all_off(16);
+  HT1621_all_offa(16);
   delay(300) ;
-  HT1621_all_on(16) ;
+  HT1621_all_ona(16) ;
   delay(300) ;
-  HT1621_all_off(16);
+  HT1621_all_offa(16);
   delay(300) ;
 
   //una vez que arranca, para que no pase más por el loop, ejecuta un loop infinito con este while
@@ -259,7 +259,7 @@ void loop()
     float headingDegrees = heading * 180 / M_PI;
     int grados = headingDegrees;
     //mandamos los grados como entero, a nuestra función para pintar grados (3 digitos y º)
-    displayGrados(grados);
+    displayGradosa(grados);
     Serial.print("Rumbo: "); Serial.print(headingDegrees);Serial.println("º ");
 
     delay(500);
