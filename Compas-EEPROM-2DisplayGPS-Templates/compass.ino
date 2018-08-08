@@ -13,7 +13,7 @@ int getHeading(){
     // Find yours here: http://www.magnetic-declination.com/
     // Mine is: -13* 2' W, which is ~13 Degrees, or (which we need) 0.22 radians
     // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
-    //declinación electromagnetica en sevilla
+    //declinaciÃ³n electromagnetica en sevilla
     float declinationAngle = 0.22;
     heading += declinationAngle;
     
@@ -28,7 +28,8 @@ int getHeading(){
     // Convert radians to degrees for readability.
     float headingDegrees = heading * 180 / M_PI;
     int grados = headingDegrees;
-    //mandamos los grados como entero, a nuestra función para pintar grados (3 digitos y º)
+    //mandamos los grados como entero, a nuestra funciÃ³n para pintar grados (3 digitos y Âº)
 
     return grados;
   }
+

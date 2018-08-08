@@ -1,13 +1,13 @@
 
 char dispnum[5] = {0x00, 0x00, 0x00, 0x00, 0x00,};
 
-/*0,1,2,3,4,5,6,7,8,9,A,b,C,c,d,E,F,G,H,L,P,S,º,*/    
+/*0,1,2,3,4,5,6,7,8,9,A,b,C,c,d,E,F,G,H,L,P,S,Âº,*/    
 const char num[]={0xEB,0x60,0xC7,0xE5,0x6C,0xAD,0xAF,0xE0,0xEF,0xED,0xEE,0x2F,0x8B,0x07,0x67,0x8F,0x8E,0xAB,0x6E,0x0B,0xCE,0xAD,0xCC,}; 
 
 /************************************************************************************************************
  * 
  * 
- * Inicio Programación Pantalla 1
+ * Inicio ProgramaciÃ³n Pantalla 1
  * 
  * 
  ************************************************************************************************************/
@@ -31,7 +31,7 @@ void SendBit_1621(uchar sdata, uchar cnt) //High bit first
 /**-------------------------------------------------------------------------
 
                   Name: SendCmd(send cmd)
-                  //Write MODE“100” AND 9 bits command
+                  //Write MODEâ€œ100â€� AND 9 bits command
   ---------------------------------------------------------------------------*/
 
 void SendCmd_1621(uchar command)
@@ -50,7 +50,7 @@ void Write_1621(uchar addr, uchar sdata)
 {
   addr <<= 2;
   CS0;
-  SendBit_1621(0xa0, 3);    //Write MODE“101”
+  SendBit_1621(0xa0, 3);    //Write MODEâ€œ101â€�
   SendBit_1621(addr, 6);    //Write addr high 6 bits
   SendBit_1621(sdata, 8);   //Write data  8 bits
   CS1;
@@ -116,7 +116,7 @@ void displayInt(long int t)
   dispnum[1] = num[(t / 10) % 10];
   dispnum[0] = num[t % 10];
 
-  //númeo de digitos a mostra
+  //nÃºmeo de digitos a mostra
   if (t>9999){
     j=4;
   }else if (t>999){
@@ -152,7 +152,7 @@ void displayFloat(float fdata){
   dispnum[1] = num[(t / 10) % 10];
   dispnum[0] = num[t % 10];
 
-  //númeo de digitos a mostra
+  //nÃºmeo de digitos a mostra
   /*
   if (t>9999){
     j=4;
@@ -194,7 +194,7 @@ sbi(dispnum[1], 4);
 /************************************************************************************************************
  * 
  * 
- * Fin Programación Pantalla A
+ * Fin ProgramaciÃ³n Pantalla A
  * 
  * 
  ************************************************************************************************************/
@@ -203,7 +203,7 @@ sbi(dispnum[1], 4);
 /************************************************************************************************************
  * 
  * 
- * Inicio Programación Pantalla A
+ * Inicio ProgramaciÃ³n Pantalla A
  * 
  * 
  ************************************************************************************************************/
@@ -225,7 +225,7 @@ void SendBit_1621a(uchar sdata, uchar cnt) //High bit first
   }
   delayMicroseconds(20);
 }
-/**------------- Name: SendCmd(send cmd) //Write MODE“100” AND 9 bits command  ------------------------------------------*/
+/**------------- Name: SendCmd(send cmd) //Write MODEâ€œ100â€� AND 9 bits command  ------------------------------------------*/
 
 void SendCmd_1621a(uchar command)
 {
@@ -240,7 +240,7 @@ void Write_1621a(uchar addr, uchar sdata)
 {
   addr <<= 2;
   CSa0;
-  SendBit_1621a(0xa0, 3);    //Write MODE“101”
+  SendBit_1621a(0xa0, 3);    //Write MODEâ€œ101â€�
   SendBit_1621a(addr, 6);    //Write addr high 6 bits
   SendBit_1621a(sdata, 8);   //Write data  8 bits
   CSa1;
@@ -287,9 +287,9 @@ void displayGradosa(long int t)
   dispnum[3] = num[(t / 100) % 10];
   dispnum[2] = num[(t / 10) % 10];
   dispnum[1] = num[t % 10];
-  dispnum[0] = num[22]; //ultimo digito º
+  dispnum[0] = num[22]; //ultimo digito Âº
 
-  //númeo de digitos a mostra
+  //nÃºmeo de digitos a mostra
   if (t>99){
     j=3;
   }else if (t>9){
@@ -330,4 +330,5 @@ void displaySensorDetailsa(void)
  * 
  * 
  *********************************************************************************************************************/
+
 

@@ -1,3 +1,5 @@
+
+
 //Author: Jesus MF
 //Arduino uno R3 y Arduino Nano
 //5 DIGIT 7SEG LCD
@@ -38,7 +40,7 @@ SoftwareSerial softSerial(9, 8);//pines de comunicacion del GPS
 
 
 float sensorValue;
-int eeAddress = 10; //dirección de memoria con los datos.
+int eeAddress = 10; //direcciÃ³n de memoria con los datos.
 
 /* Assign a unique ID to this sensor at the same time */
 Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
@@ -132,7 +134,7 @@ pinMode(CS, OUTPUT); //Pin 2
   pinMode(WR, OUTPUT); //Pin 3
   pinMode(DATA, OUTPUT); //Pin 4
 
-  //pantalla 2 para brújula
+  //pantalla 2 para brÃºjula
   pinMode(CSa, OUTPUT); //Pin 5
   pinMode(WRa, OUTPUT); //Pin 6
   pinMode(DATAa, OUTPUT); //Pin 7
@@ -181,13 +183,13 @@ pinMode(CS, OUTPUT); //Pin 2
 
   
   Serial.begin(9600);
-  Serial.println("Test Brújula digital"); Serial.println("");
+  Serial.println("Test BrÃºjula digital"); Serial.println("");
 
   /* Initialise the sensor */
   if (!mag.begin())
   {
     /* There was a problem detecting the HMC5883 ... check your connections */
-    Serial.println("Ooops, Brújula no detectada, comprueba los cables!");
+    Serial.println("Ooops, BrÃºjula no detectada, comprueba los cables!");
     while (1);
   }
 
@@ -217,7 +219,7 @@ void loop()
   long int t = 0;
  
 
-  //una vez que arranca, para que no pase más por el loop, ejecuta un loop infinito con este while
+  //una vez que arranca, para que no pase mÃ¡s por el loop, ejecuta un loop infinito con este while
   while (1)
   {
 
@@ -322,12 +324,13 @@ Serial.print("Distancia: ");
     
     //calculo del rumbo
     int grados = getHeading();
-    //mandamos los grados como entero, a nuestra función para pintar grados (3 digitos y º)
+    //mandamos los grados como entero, a nuestra funciÃ³n para pintar grados (3 digitos y Âº)
     displayGradosa(grados);
-    Serial.print("Rumbo: "); Serial.print(grados);Serial.println("º ");
+    Serial.print("Rumbo: "); Serial.print(grados);Serial.println("Âº ");
 
     delay(150);
   }
 }
+
 
 
