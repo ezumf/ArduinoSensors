@@ -189,7 +189,7 @@ pinMode(CS, OUTPUT); //Pin 2
   if (!mag.begin())
   {
     /* There was a problem detecting the HMC5883 ... check your connections */
-    Serial.println("Ooops, BrÃºjula no detectada, comprueba los cables!");
+    Serial.println("Ooops, Brujula no detectada, comprueba los cables!");
     while (1);
   }
 
@@ -223,8 +223,8 @@ void loop()
   while (1)
   {
 
-//inicio busqueda GPS
-contSeg++;
+  //inicio busqueda GPS
+  contSeg++;
   // Intentar recibir secuencia durante un segundo
   for (unsigned long start = millis(); millis() - start < 1000;)
   {
@@ -234,44 +234,7 @@ contSeg++;
       if (gps.encode(c)) // Nueva secuencia recibida
         newData = true;
     }
-  }
-   if (newData)
-  {
-    satelites=gps.satellites();
-    unsigned long age;
-    gps.f_get_position(&flat, &flon, &age);
-
-    //convertimos las coordenadas a doble y radianes, para poder trabajar con las funciones matemticas.
-    dlat=deg2rad((double)flat);
-    dlon=deg2rad((double)flon);
-    if(!datosCorrectos){
-         dlatIni=dlat;
-         dlonIni=dlon;
-         datosCorrectos=true;
-      }else{
-        if(contSeg>seg){
-          contSeg=0;
-          double incremento=caculaDistancia(dlatIni,dlonIni,dlat,dlon);
-          Serial.println(incremento,6);
-          //Si la distancia supera el minimo, actualizamos el total, y las coordenadas
-          if(incremento>minDist){
-              distancia+=incremento;
-              dlatIni=dlat;
-              dlonIni=dlon;
-            }
-        }
-      }
-      
-  }else{
-     HT1621_all_off(16);
-    delay(150) ;
-    
-    }
-    
-displayFloat(distancia);
-
-
-Serial.print("Distancia: ");
+    Serial.print("Distancia: ");
     Serial.println(distancia,6);
     Serial.print("Satelites: ");
     Serial.println(satelites);
@@ -314,6 +277,45 @@ Serial.print("Distancia: ");
         } else {
           
         }
+  }
+   if (newData)
+  {
+    satelites=gps.satellites();
+    unsigned long age;
+    gps.f_get_position(&flat, &flon, &age);
+
+    //convertimos las coordenadas a doble y radianes, para poder trabajar con las funciones matemticas.
+    dlat=deg2rad((double)flat);
+    dlon=deg2rad((double)flon);
+    if(!datosCorrectos){
+         dlatIni=dlat;
+         dlonIni=dlon;
+         datosCorrectos=true;
+      }else{
+        if(contSeg>seg){
+          contSeg=0;
+          double incremento=caculaDistancia(dlatIni,dlonIni,dlat,dlon);
+          Serial.println(incremento,6);
+          //Si la distancia supera el minimo, actualizamos el total, y las coordenadas
+          if(incremento>minDist){
+              distancia+=incremento;
+              displayFloat(distancia);
+              dlatIni=dlat;
+              dlonIni=dlon;
+            }
+        }
+      }
+      
+  }else{
+     HT1621_all_off(16);
+    delay(150) ;
+    
+    }
+    
+
+
+
+    
       
         
         delay(150);
