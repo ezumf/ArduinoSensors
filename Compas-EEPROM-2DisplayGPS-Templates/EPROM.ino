@@ -2,7 +2,7 @@
 void inicializaEEPROM(){
   int e; //variable con el valor de la EEPROM
   EEPROM.get( eeAddress, e );//leemos de la EEPROM
-  if(e<0){//si e meno que 0, inicializamos a 0
+  if(e<0){//si es menor que 0, inicializamos a 0
     e=0;
     EEPROM.put( eeAddress, e );
   }else{//inicializamos contador
@@ -11,15 +11,28 @@ void inicializaEEPROM(){
 }
 
 void incrementaContador(){
-  contador++;
+  //distancia=distacia+escala;
+  contador=contador+escala;
+ Serial.print("contador: ");
+ Serial.println(contador);
   EEPROM.put( eeAddress, contador );
 }
 
 void decrementaContador(){
   if(contador>0){
-    contador--;
+    //distancia=distacia-escala;
+    contador=contador-escala;
+    Serial.print("contador: ");
+    Serial.println(contador);
     EEPROM.put( eeAddress, contador );
   }
   
 }
 
+void incremetaContadorDouble(double incremento){
+  if(distancia>0){
+    contador=contador+(int)(incremento*1000);
+    EEPROM.put( eeAddress, contador );
+  }
+  
+}

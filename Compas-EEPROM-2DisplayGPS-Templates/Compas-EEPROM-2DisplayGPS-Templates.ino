@@ -29,7 +29,10 @@ const int buttonPinMenos = 11;   // the number of the pushbutton pin -
 const int buttonPinSelect = 10;  // the number of the pushbutton pin select
 const int ledPin =  13;      // the number of the LED pin
 
-int contador=0;
+int contador=0; //EEPROM
+double distancia=0.0; // distancia inicial, 
+int escala=100; // metros del pulsador, 
+
 // variables will change:
 int buttonStateMas = 0;         // variable for reading the pushbutton status
 int buttonStateMenos = 0;         // variable for reading the pushbutton status
@@ -129,6 +132,8 @@ float ReadSensor()
 
 void setup()
 {
+
+  
   //Pantalla 1 para contador
 pinMode(CS, OUTPUT); //Pin 2
   pinMode(WR, OUTPUT); //Pin 3
@@ -175,15 +180,16 @@ pinMode(CS, OUTPUT); //Pin 2
   inicializaEEPROM();
   //Texto de inicio
   Serial.println("BotonesEEPROM");
-  Serial.print("contador: ");
-  Serial.println(contador);
+  Serial.print("Distancia: ");
+  Serial.println(distancia);
   //displayInt(contador);
   //displayFloat(251.36);
-
+  distancia=(double)contador/1000;
+  displayFloat(distancia);
 
   
   Serial.begin(9600);
-  Serial.println("Test BrÃºjula digital"); Serial.println("");
+  Serial.println("Test Brujula digital"); Serial.println("");
 
   /* Initialise the sensor */
   if (!mag.begin())
@@ -204,7 +210,7 @@ void loop()
 //inicio GPS
   float flat, flon; //se necesitan en float, por compatibilidad con la libreria TinyGPS
   double dlat,dlon,dlatIni,dlonIni; // Estos son los valores que usaremos
-  double distancia=0.0; // distancia inicial, 
+ 
   bool datosCorrectos=false;
  
   bool newData = false;
@@ -234,11 +240,11 @@ void loop()
       if (gps.encode(c)) // Nueva secuencia recibida
         newData = true;
     }
-    Serial.print("Distancia: ");
+   /* Serial.print("Distancia: ");
     Serial.println(distancia,6);
     Serial.print("Satelites: ");
     Serial.println(satelites);
-    Serial.println(" ");
+    Serial.println(" ");*/
     
     //inicio contador
  // read the state of the pushbutton value:
@@ -253,7 +259,10 @@ void loop()
         if (buttonStateMas == HIGH) {
           // contador++;
           incrementaContador();
-          displayInt(contador);
+          distancia= (double)contador/1000;
+           displayFloat(distancia);
+         // displayInt(contador);
+          delay(300);
           Serial.print("contador: ");
           Serial.println(contador);
         } else {
@@ -262,7 +271,9 @@ void loop()
         if (buttonStateMenos == HIGH) {
           // contador--:
           decrementaContador();
-          displayInt(contador);
+          distancia=(double)contador/1000;
+           displayFloat(distancia);
+            delay(300);
           Serial.print("contador: ");
           Serial.println(contador);
           
@@ -280,6 +291,7 @@ void loop()
   }
    if (newData)
   {
+    
     satelites=gps.satellites();
     unsigned long age;
     gps.f_get_position(&flat, &flon, &age);
@@ -298,26 +310,22 @@ void loop()
           Serial.println(incremento,6);
           //Si la distancia supera el minimo, actualizamos el total, y las coordenadas
           if(incremento>minDist){
-              distancia+=incremento;
+              //distancia+=incremento;
+              incremetaContadorDouble(incremento);
+              distancia=(double)contador/1000;
               displayFloat(distancia);
               dlatIni=dlat;
               dlonIni=dlon;
+             
             }
         }
       }
       
   }else{
-     HT1621_all_off(16);
+    HT1621_all_off(16);
     delay(150) ;
-    
+    displayFloat(distancia);
     }
-    
-
-
-
-    
-      
-        
         delay(150);
     
     
@@ -328,7 +336,7 @@ void loop()
     int grados = getHeading();
     //mandamos los grados como entero, a nuestra funciÃ³n para pintar grados (3 digitos y Âº)
     displayGradosa(grados);
-    Serial.print("Rumbo: "); Serial.print(grados);Serial.println("Âº ");
+    Serial.print("Rumbo: "); Serial.print(grados);Serial.println("º ");
 
     delay(150);
   }
