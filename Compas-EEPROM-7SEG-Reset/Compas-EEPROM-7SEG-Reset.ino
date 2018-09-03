@@ -251,8 +251,8 @@ void loop()
   buttonStateMas = digitalRead(buttonPinMas);
   buttonStateMenos = digitalRead(buttonPinMenos);
   buttonStateSelect = digitalRead(buttonPinSelect);
-
-  
+  unsigned long selectMilis=millis();
+  unsigned long time=(millis()-selectMilis)/1000;
   
        // check if the pushbutton is pressed.
         // if it is, the buttonState is HIGH:
@@ -262,9 +262,32 @@ void loop()
           distancia= (double)contador/1000;
            displayFloat(distancia);
          // displayInt(contador);
-          delay(300);
-          Serial.print("contador: ");
-          Serial.println(contador);
+          delay(100);
+          /*Serial.print("contador: ");
+          Serial.println(contador);*/
+          boolean timeOutMas=false;
+           while((buttonStateMas == 1)){
+            buttonStateMas = digitalRead(buttonPinMas);
+            time=(millis()-selectMilis)/1000;
+            timeOutMas=time>1;
+            Serial.print("time: ");
+            Serial.print(time);
+            Serial.print(" selectMilis: ");
+            Serial.print(selectMilis);
+            Serial.print(" timeOutMas: ");
+            Serial.println(timeOutMas);
+            if (timeOutMas){
+              Serial.println("Incremento++");
+              incrementaContador();
+              distancia= (double)contador/1000;
+              displayFloat(distancia);
+              delay(100);
+            }else{
+              delay(100);
+            }
+
+           }
+           
         } else {
           // nothing;
         }
@@ -272,10 +295,35 @@ void loop()
           // contador--:
           decrementaContador();
           distancia=(double)contador/1000;
-           displayFloat(distancia);
-            delay(300);
-          Serial.print("contador: ");
-          Serial.println(contador);
+          displayFloat(distancia);
+          delay(100);
+          /*Serial.print("contador: ");
+          Serial.println(contador);*/
+             boolean timeOutMenos=false;
+           while((buttonStateMenos == 1)){
+           buttonStateMenos = digitalRead(buttonPinMenos);
+            time=(millis()-selectMilis)/1000;
+            timeOutMenos=time>1;
+            Serial.print("time: ");
+            Serial.print(time);
+            Serial.print(" selectMilis: ");
+            Serial.print(selectMilis);
+            Serial.print(" timeOutMenos: ");
+            Serial.println(timeOutMenos);
+            if (timeOutMenos){
+              Serial.println("Decremento--");
+              decrementaContador();
+              distancia= (double)contador/1000;
+              displayFloat(distancia);
+              delay(100);
+            }else{
+              delay(100);   
+            }
+
+           }
+          
+
+          //si se deja pulsado
           
         } else {
           // nothing:
@@ -283,14 +331,30 @@ void loop()
       
         if (buttonStateSelect == HIGH) {
           // SELECTED
+         // Serial.println(buttonStateSelect);
           Serial.println("SELECT");
-          int selectMilis=millis();
+         
+          Serial.println(selectMilis);
            delay(150);
-          while(buttonStateSelect == HIGH){
-            int time=(millis()-selectMilis)/1000;
-            Serial.print("seleccionado: ");
-            Serial.println(time);
-            }
+           boolean timeOutReset=false;
+          while((buttonStateSelect == 1) && !timeOutReset){
+            buttonStateSelect = digitalRead(buttonPinSelect);
+            time=(millis()-selectMilis)/1000;
+            timeOutReset=time>4;
+            Serial.print("time: ");
+            Serial.print(time);
+            Serial.print(" selectMilis: ");
+            Serial.print(selectMilis);
+            Serial.print(" timeOutReset: ");
+            Serial.println(timeOutReset);
+            delay(150);
+          }
+            if(timeOutReset){
+              Serial.println("RESET");
+              resetContador();
+              distancia=(double)contador/1000;
+              displayFloat(distancia);
+              }
           
         } else {
           
